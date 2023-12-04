@@ -3,7 +3,7 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z
+    POSTGRES_PRISMA_URL: z
       .string()
       .url()
       .refine(
@@ -27,7 +27,7 @@ export const env = createEnv({
   },
   client: {},
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
+    POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,

@@ -9,27 +9,14 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
-model Organization {
-  id         String       @id @default(uuid())
-  name       String
-  parentUser ParentUser[]
-}
-
-// model Role {
-//   id             String       @id @default(uuid())
-//   name           String
-//   organization   Organization @relation(fields: [organizationId], references: [id])
-//   organizationId String
-// }
-
-model ParentUser {
+model User {
   id              String       @id @default(uuid())
   email           String       @unique
   phone           String       @unique
   name            String
   organization    Organization @relation(fields: [organizationId], references: [id])
   organizationId  String
-  users           User[]
+  students        StudentUser[]  // Renamed 'users' to 'students'
   accountVerified Boolean      @default(false)
   otp             OTP?
 }
@@ -37,18 +24,24 @@ model ParentUser {
 model OTP {
   id           String     @id @default(uuid())
   code         String     @unique
-  parentUser   ParentUser @relation(fields: [parentUserId], references: [id])
-  parentUserId String     @unique
+  user         User       @relation(fields: [userId], references: [id]) // Renamed 'parentUser' to 'user'
+  userId       String     @unique
   updatedAt    DateTime   @updatedAt
   expiresAt    DateTime
   verifiedAt   DateTime?
 }
 
-model User {
+model StudentUser {
   id           String     @id @default(uuid())
   name         String
   country      String
   address      String
-  parentUser   ParentUser @relation(fields: [parentUserId], references: [id])
-  parentUserId String
+  user         User       @relation(fields: [userId], references: [id]) // Renamed 'parentUserId' to 'userId'
+  userId       String
+}
+
+model Organization {
+  id   String   @id @default(uuid())
+  name String
+  users User[]   // Renamed 'parentUser' to 'users'
 }
