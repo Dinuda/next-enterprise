@@ -3,6 +3,7 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
+    ANALYZE: z.boolean().default(false),
     POSTGRES_PRISMA_URL: z
       .string()
       .url()
