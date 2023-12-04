@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model Organization {
+  id         String       @id @default(uuid())
+  name       String
+  parentUser ParentUser[]
+}
+
+// model Role {
+//   id             String       @id @default(uuid())
+//   name           String
+//   organization   Organization @relation(fields: [organizationId], references: [id])
+//   organizationId String
+// }
+
+model ParentUser {
+  id              String       @id @default(uuid())
+  email           String       @unique
+  phone           String       @unique
+  name            String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String
+  users           User[]
+  accountVerified Boolean      @default(false)
+  otp             OTP?
+}
+
+model OTP {
+  id           String     @id @default(uuid())
+  code         String     @unique
+  parentUser   ParentUser @relation(fields: [parentUserId], references: [id])
+  parentUserId String     @unique
+  updatedAt    DateTime   @updatedAt
+  expiresAt    DateTime
+  verifiedAt   DateTime?
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  country      String
+  address      String
+  parentUser   ParentUser @relation(fields: [parentUserId], references: [id])
+  parentUserId String
+}
