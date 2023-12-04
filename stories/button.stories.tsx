@@ -1,7 +1,7 @@
 // Button.stories.tsx
 import { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
-import { Button, ButtonProps, colorVariants, sizeVariants } from 'components/ui/button/button';
+import { Button, ButtonProps, colorVariants, sizeVariants } from 'components/ui/button';
 
 export default {
   title: 'Components/Button',
