@@ -35,12 +35,14 @@ const RegisterFormSchema = z.object({
     if (date > new Date() || date < new Date(1900, 1, 1)) return false
     return !isNaN(date.getTime())
   }),
+  parentName: z.string().min(2),
 })
 
 type RegisterFormValues = z.infer<typeof RegisterFormSchema>
 
 // This can come from your database or API.
 const defaultValues: Partial<RegisterFormValues> = {
+  parentName: "",
   email: "",
   phone: "",
   studentName: "",
@@ -68,9 +70,10 @@ export function RegisterForm() {
       body: JSON.stringify({
         email: data.email,
         phone: data.phone,
-        name: data.studentName,
+        studentName: data.studentName,
         address: data.address,
-        dob: data.doB,
+        doB: data.doB,
+        name: data.parentName
       }),
     }).then(async (res) => {
       if (res.status === 200) {
@@ -86,6 +89,19 @@ export function RegisterForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+            control={form.control}
+            name="parentName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} required />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"

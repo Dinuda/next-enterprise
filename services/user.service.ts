@@ -25,7 +25,7 @@ async function create(email: string, phone: string, name: string): Promise<UserC
                 email: email,
                 phone: phone,
                 name: name,
-                organization: { connect: { id: "036a2f11-4327-4405-bda3-c7bfa18e55c2" } },
+                organization: { connect: { id: "4ce9ef78-a408-43d2-8673-59d90b0e5cea" } },
                 accountVerified: false,
             },
             include: {

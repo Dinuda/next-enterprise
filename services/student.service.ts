@@ -13,12 +13,9 @@ async function create(name: string, address: string, doB: string, country: strin
             data: {
                 name: name,
                 address: address,
-                doB: doB,
                 country: country,   
-                userId:  parentId,
-            },
-            include: {
-                user: true,
+                dateOfBirth: doB,
+                user:  { connect: { id: parentId } },
             }
         }) as StudentUser;
 

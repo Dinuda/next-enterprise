@@ -35,8 +35,8 @@ model StudentUser {
   id      String @id @default(uuid())
   name    String
   country String
-  doB     DateTime
   address String
+  dateOfBirth     DateTime
   user    User   @relation(fields: [userId], references: [id]) // Renamed 'parentUserId' to 'userId'
   userId  String
 }

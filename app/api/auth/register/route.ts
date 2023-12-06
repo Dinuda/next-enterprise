@@ -8,10 +8,9 @@ import userService from "services/user.service";
 
 export async function POST(req: Request) {
   try {
-    const { email, phone, name } = await req.json() as { email: string, phone: string, name: string };
-    const { address, doB, country, studentName } = await req.json() as { address: string, doB: string, country: string, studentName: string };
+    const { email, phone, name, address, doB, country, studentName } = await req.json() as { email: string, phone: string, name: string, address: string, doB: string, country: string, studentName: string };
     const user = await userService.create(email, phone, name);
-    const student = await studentService.create(studentName, address, doB, country, user.id);
+    const student = await studentService.create(studentName, address,doB , "Sri Lanka", user.id);
     const code = await otpService.create(user.id);
     
     console.log("code", code);

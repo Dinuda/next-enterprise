@@ -4,7 +4,7 @@ export interface StudentUser {
     id: string;
     name: string;
     country: string;
-    doB: Date;
+    dateOfBirth: Date;
     address: string;
     user: User;
     userId: string;
