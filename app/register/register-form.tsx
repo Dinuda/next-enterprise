@@ -19,13 +19,12 @@ const RegisterFormSchema = z.object({
   phone: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
   studentName: z.string().min(2),
   address: z.string().min(2),
-  doB: z.date().refine(
-    (date) => {
-      // check if date is between 1900 and 2023
-      return date.getFullYear() >= 1900 && date.getFullYear() <= 2023
-    },
-    { message: "Invalid date of birth" }
-  ),
+  doB: z.string().refine((val) => {
+    if (!val) return false
+    const date = new Date(val)
+    if(date > new Date() || date < new Date(1900, 1, 1)) return false
+    return !isNaN(date.getTime())
+  }),
 })
 
 type RegisterFormValues = z.infer<typeof RegisterFormSchema>
@@ -36,7 +35,7 @@ const defaultValues: Partial<RegisterFormValues> = {
   phone: "",
   studentName: "",
   address: "",
-  doB: new Date(),
+  doB: ""
 }
 
 export function RegisterForm() {

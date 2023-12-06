@@ -1,4 +1,4 @@
-import { ParentUser  } from "./parentUser";
+import { ParentUser  } from "./user";
 
 export interface Organization {
     id: string;

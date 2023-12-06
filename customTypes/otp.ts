@@ -1,10 +1,10 @@
-import { ParentUser } from "./parentUser";
+import { User } from "./user";
 
 export interface OTP {
     id: string;
     code: string;
-    parentUser: ParentUser;
-    parentUserId: string;
+    user: User;
+    userId: string;
     updatedAt: Date;
     expiresAt: Date;
     verifiedAt: Date;

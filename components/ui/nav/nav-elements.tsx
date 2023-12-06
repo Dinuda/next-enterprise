@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NavLink } from "interface/ui/NavLink";
+import { NavLink } from "customTypes/ui/NavLink";
 
 
 export function NavElements({ navigationLinks }: { navigationLinks: NavLink[] }) {

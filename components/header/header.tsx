@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "components/ui/button";
 import { NavElements } from "components/ui/nav/nav-elements";
-import { NavLink } from "interface/ui/NavLink";
+import { NavLink } from "customTypes/ui/NavLink";
 
 export default async function Header() {
   const navigation = [
