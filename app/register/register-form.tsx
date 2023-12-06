@@ -3,12 +3,12 @@ import "react-international-phone/style.css"
 import "./register-form.css"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
+import { PhoneNumberUtil } from "google-libphonenumber"
 import { Calendar as CalendarIcon } from "lucide-react"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { PhoneInput } from "react-international-phone"
 import * as z from "zod"
-
 import { Button } from "components/ui/button"
 import { Calendar } from "components/ui/calendar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "components/ui/form"
@@ -18,7 +18,15 @@ import { cn } from "lib/utils"
 
 const RegisterFormSchema = z.object({
   email: z.string().email(),
-  phone: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
+  phone: z.string().refine((val) => {
+    const phoneUtil = PhoneNumberUtil.getInstance()
+    try {
+      const phone = phoneUtil.parseAndKeepRawInput(val)
+      return phoneUtil.isValidNumber(phone)
+    } catch (e) {
+      return false
+    }
+  }),
   studentName: z.string().min(2),
   address: z.string().min(2),
   doB: z.string().refine((val) => {
@@ -40,11 +48,13 @@ const defaultValues: Partial<RegisterFormValues> = {
   doB: "",
 }
 
+// listen to form changes
+
 export function RegisterForm() {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
-    defaultValues,
     mode: "onChange",
+    defaultValues,
   })
 
   function onSubmit(data: RegisterFormValues) {
@@ -72,10 +82,6 @@ export function RegisterForm() {
     })
   }
 
-  const handlePhoneChange = (phone: string) => {
-    form.setValue("phone", phone)
-  }
-
   return (
     <>
       <Form {...form}>
@@ -100,13 +106,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <PhoneInput
-                    disableFormatting={true}
-                    defaultCountry="ua"
-                    {...field}
-                    onChange={handlePhoneChange}
-                    required
-                  />
+                  <PhoneInput disableFormatting={true} defaultCountry="ua" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
