@@ -37,7 +37,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>
+      <body className={inter.variable} suppressHydrationWarning={true}>
         <Suspense fallback="Loading...">
           <Header />
         </Suspense>

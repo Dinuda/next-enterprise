@@ -18,9 +18,11 @@ import { cn } from "lib/utils"
 
 const RegisterFormSchema = z.object({
   email: z.string().email(),
-  phone: z.string().refine((val) => {
+  phone: z.string().refine((val) => {    
+    if (val === "") return true;
     const phoneUtil = PhoneNumberUtil.getInstance()
     try {
+      // wait for initialisation
       const phone = phoneUtil.parseAndKeepRawInput(val)
       return phoneUtil.isValidNumber(phone)
     } catch (e) {
@@ -44,13 +46,11 @@ type RegisterFormValues = z.infer<typeof RegisterFormSchema>
 const defaultValues: Partial<RegisterFormValues> = {
   parentName: "",
   email: "",
-  phone: "",
+  phone: "+94",
   studentName: "",
   address: "",
   doB: "",
 }
-
-// listen to form changes
 
 export function RegisterForm() {
   const form = useForm<RegisterFormValues>({
@@ -60,8 +60,6 @@ export function RegisterForm() {
   })
 
   function onSubmit(data: RegisterFormValues) {
-    console.log(data)
-
     fetch("/api/auth/register", {
       method: "POST",
       headers: {
@@ -122,7 +120,7 @@ export function RegisterForm() {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <PhoneInput disableFormatting={true} defaultCountry="ua" {...field} />
+                  <PhoneInput defaultCountry="lk" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
