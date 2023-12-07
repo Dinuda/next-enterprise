@@ -38,6 +38,7 @@ const RegisterFormSchema = z.object({
     return !isNaN(date.getTime())
   }),
   parentName: z.string().min(2),
+  country: z.string()
 })
 
 type RegisterFormValues = z.infer<typeof RegisterFormSchema>
@@ -50,16 +51,18 @@ const defaultValues: Partial<RegisterFormValues> = {
   studentName: "",
   address: "",
   doB: "",
+  country: "lk"
 }
 
 export function RegisterForm() {
+  // add to state
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
     mode: "onChange",
     defaultValues,
   })
 
-  function onSubmit(data: RegisterFormValues) {
+  function onSubmit(data: RegisterFormValues) {        
     fetch("/api/auth/register", {
       method: "POST",
       headers: {
@@ -68,10 +71,11 @@ export function RegisterForm() {
       body: JSON.stringify({
         email: data.email,
         phone: data.phone,
-        studentName: data.studentName,
+        name: data.parentName,
         address: data.address,
         doB: data.doB,
-        name: data.parentName
+        country: data.country,
+        studentName: data.studentName,
       }),
     }).then(async (res) => {
       if (res.status === 200) {

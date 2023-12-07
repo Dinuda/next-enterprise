@@ -6,6 +6,8 @@ AWS.config.update({
 });
 
 export function sendSNSNotification(message: string, phoneNumber: string) {
+  console.log("sendSNSNotification", message, phoneNumber);
+  
   const sns = new AWS.SNS();
   const params = {
     Message: message,

@@ -37,7 +37,7 @@ model StudentUser {
   country String
   address String
   dateOfBirth     DateTime
-  user    User   @relation(fields: [userId], references: [id]) // Renamed 'parentUserId' to 'userId'
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
 }
 
