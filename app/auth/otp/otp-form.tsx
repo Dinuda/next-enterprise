@@ -19,15 +19,13 @@ const defaultValues: Partial<OTPFormValues> = {
 }
 
 export function OTPForm() {
-
-
   const form = useForm<OTPFormValues>({
     resolver: zodResolver(OTPFormSchema),
     mode: "onChange",
     defaultValues,
   })
 
-  function onSubmit(data: OTPFormValues) {        
+  function onSubmit(data: OTPFormValues) {
     fetch("/api/auth/otp/verify", {
       method: "POST",
       headers: {
@@ -47,28 +45,26 @@ export function OTPForm() {
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John Doe" {...field} required />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          control={form.control}
+          name="otp"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" {...field} required />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button type="submit" className="w-full" disabled={!form.formState.isValid}>
-            Sign up
-          </Button>
-        </form>
-      </Form>
-    </>
+        <Button type="submit" className="w-full" disabled={!form.formState.isValid}>
+          Sign up
+        </Button>
+      </form>
+    </Form>
   )
 }

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { PhoneNumberUtil } from "google-libphonenumber"
 import { Calendar as CalendarIcon } from "lucide-react"
+import { useRouter } from 'next/navigation'
 import React from "react"
 import { useForm } from "react-hook-form"
 import { PhoneInput } from "react-international-phone"
@@ -14,6 +15,7 @@ import { Calendar } from "components/ui/calendar"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "components/ui/form"
 import { Input } from "components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover"
+import { useAuthStore } from "lib/state/auth.store"
 import { cn } from "lib/utils"
 
 const RegisterFormSchema = z.object({
@@ -54,7 +56,12 @@ const defaultValues: Partial<RegisterFormValues> = {
   country: "lk"
 }
 
+
+
 export function RegisterForm() {
+  const { setEmail, setPhone } = useAuthStore()
+  const router = useRouter()
+
   // add to state
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
@@ -62,7 +69,9 @@ export function RegisterForm() {
     defaultValues,
   })
 
-  function onSubmit(data: RegisterFormValues) {        
+  function onSubmit(data: RegisterFormValues) {     
+    setEmail(data.email)
+    setPhone(data.phone)   
     fetch("/api/auth/register", {
       method: "POST",
       headers: {
@@ -78,8 +87,8 @@ export function RegisterForm() {
         studentName: data.studentName,
       }),
     }).then(async (res) => {
-      if (res.status === 200) {
-        setTimeout(() => {}, 2000)
+      if (res.status === 201) {
+        router.push("/auth/otp")
       } else {
         const { error } = (await res.json()) as { error: string }
         console.log(error)

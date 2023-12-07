@@ -31,9 +31,8 @@ export async function POST(req: Request) {
 
     sendSESEmail(`Your verification code is ${code}`, user.email, "Verify your account")
 
-    sendSNSNotification(`Your verification code is ${code}`, user.phone)
-
-    return NextResponse.json({ message: "User created successfully" }, { status: 201 })
+    // sendSNSNotification(`Your verification code is ${code}`, user.phone)
+    return NextResponse.json({ message: "User created" }, { status: 201 })
   } catch (error) {
     console.log(error)
     return NextResponse.json({ error: "User already exists" }, { status: 400 })
