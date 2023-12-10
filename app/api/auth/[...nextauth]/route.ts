@@ -1,35 +1,39 @@
-// import { compare } from "bcrypt"
-// import NextAuth, { type NextAuthOptions } from "next-auth"
-// import CredentialsProvider from "next-auth/providers/credentials"
-// import prisma from "lib/prisma"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
+import { sendSESEmail } from "lib/aws/ses";
+import prisma from "lib/prisma";
 
-// export const authOptions: NextAuthOptions = {
-//   providers: [
-//     CredentialsProvider({
-//       credentials: {
-//         email: { label: "Email", type: "email" },
-//         password: { label: "Password", type: "password" },
-//       },
-//       async authorize(credentials) {
-//         const { email, password } = credentials ?? {}
-//         if (!email || !password) {
-//           throw new Error("Missing username or password")
-//         }
-//         const user = await prisma.user.findUnique({
-//           where: {
-//             email,
-//           },
-//         })
-//         // if user doesn't exist or password doesn't match
-//         if (!user || !(await compare(password, user.password))) {
-//           throw new Error("Invalid username or password")
-//         }
-//         return user as any
-//       },
-//     }),
-//   ],
-// }
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
+  providers: [
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+      
+      async generateVerificationToken() {
+        return "ABC123"
+      },
+      async sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { server, from },
+      }) {
+        const { host } = new URL(url)
+        sendSESEmail("Your verification code is ABC123", email, "Verify your account")
+      }
+    }),
+  ],
+};
 
-// const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions);
 
-// export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
