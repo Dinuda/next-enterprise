@@ -10,21 +10,22 @@ datasource db {
 }
 
 model User {
-  id              String        @id @default(uuid())
-  email           String        @unique
-  phone           String        @unique
-  name            String
-  organization    Organization  @relation(fields: [organizationId], references: [id])
-  organizationId  String
-  students        StudentUser[] // Renamed 'users' to 'students'
-  accountVerified Boolean       @default(false)
-  otp             OTP?
-  sessions        Session[]
-  accounts        Account[]
+  id             String        @id @default(cuid())
+  email          String        @unique
+  phone          String        @unique
+  name           String
+  password       String?
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  organizationId String
+  students       StudentUser[] // Renamed 'users' to 'students'
+  emailVerified  Boolean       @default(false)
+  otp            OTP?
+  sessions       Session[]
+  accounts       Account[]
 }
 
 model OTP {
-  id         String    @id @default(uuid())
+  id         String    @id @default(cuid())
   code       String    @unique
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String    @unique
@@ -34,34 +35,34 @@ model OTP {
 }
 
 model StudentUser {
-  id      String @id @default(uuid())
-  name    String
-  country String
-  address String
-  dateOfBirth     DateTime
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  address     String
+  dateOfBirth DateTime
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 }
 
 model Organization {
-  id    String @id @default(uuid())
+  id    String @id @default(cuid())
   name  String
   users User[] // Renamed 'parentUser' to 'users'
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
